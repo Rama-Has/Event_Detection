@@ -4,7 +4,7 @@ var baseLayer = L.tileLayer(
   "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   {
     attribution: "...",
-    maxZoom: 20,
+    maxZoom: 20, 
   }
 );
 var cfg = {
@@ -24,6 +24,13 @@ var cfg = {
   lngField: "lng",
   // which field name in your data represents the data value - default "value"
   valueField: "score",
+  // gradient: {
+  //   0.15: "rgb(0,0,255)",
+  //   0.35: "rgb(0,255,255)",
+  //   0.65: "rgb(0,255,0)",
+  //   0.95: "yellow",
+  //   0.99: "rgb(255,0,0)",
+  // },
 };
 
 var heatmapLayer = new HeatmapOverlay(cfg);
@@ -69,13 +76,13 @@ async function getPoints() {
       "&distance=" +
       formData.distance
   ).then(async (response) => {
-    res = await response.json(); 
-    data = res.coordinates
+    res = await response.json();
+    data = res.coordinates;
     heatmapLayer.setData(
       (testData = {
         data: data,
       })
-    );     
+    );
   });
 }
 
