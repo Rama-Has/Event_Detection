@@ -4,6 +4,7 @@ def retreived_docs(query_fields, es_connection):
     """
     """
     documents = es_connection.search(
+        index = "tweets_with_mapping2",  
         body = { 
             "size": 1000, 
             "query": {

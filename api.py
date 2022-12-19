@@ -1,10 +1,8 @@
 from fastapi import Request, FastAPI, Form 
 from fastapi.templating import Jinja2Templates 
 from fastapi.staticfiles import StaticFiles
-from http import HTTPStatus
-import uvicorn  
-from typing import Dict
-import logging 
+from http import HTTPStatus 
+from typing import Dict 
 from elasticsearch import Elasticsearch 
 from src.utils import retreived_docs, get_coordinates_list, get_tweet_text 
 
@@ -42,8 +40,4 @@ async def  _get_docs(request: Request) -> Dict:
         "coordinates": coordinates,
         "text_list": tweets_text,
     }  
- 
-
-
-
  

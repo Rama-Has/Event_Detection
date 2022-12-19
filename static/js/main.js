@@ -1,5 +1,7 @@
 window.onload = async function () {};
-
+function get_suggesstion(e){
+  console.log(e.target.value)
+}
 var baseLayer = L.tileLayer(
   "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   {
@@ -79,10 +81,9 @@ async function getPoints() {
     res = await response.json();
     data = res.coordinates;
     // check if the coonrdinates list doesnot contain data 
-    if(res.alert){
-      $("#alertContainer")[0].classList.remove("d-none")
-    }else{  
-      $("#alertContainer")[0].classList.add("d-none")
+    if(res.alert){ 
+      window.alert("Your query has no results, please try with another fields");
+    }else{ 
       heatmapLayer.setData(
         (testData = {
           data: data,
@@ -115,15 +116,7 @@ map.on("click", onMapClick);
 
 $(document).ready(async function () {
   $("#searchButton")[0].addEventListener("click", getPoints);
-    // FeatureGroup is to store editable layers
-    // var drawnItems = new L.FeatureGroup();
-    // map.addLayer(drawnItems);
-    // var drawControl = new L.Control.Draw({
-    //     edit: {
-    //         featureGroup: drawnItems
-    //     }
-    // });
-    // map.addControl(drawControl);
+  $("#text")[0].addEventListener("input", get_suggesstion)
 });
 
 

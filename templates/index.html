@@ -1,48 +1,101 @@
 <html>
-  <head> 
+  <head>
     <title>Search View</title>
-    <style>
-    </style>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-        integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
-        crossorigin=""/>
-            <!-- Make sure you put this AFTER Leaflet's CSS -->
-        <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
-        integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
-        crossorigin=""></script>
-        
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <style></style>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+      crossorigin=""
+    />
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+      integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+      crossorigin=""
+    ></script>
 
-        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script> -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js" integrity="sha512-ozq8xQKq6urvuU6jNgkfqAmT7jKN2XumbrX1JiB3TnF7tI48DPI4Gy1GXKD/V3EExgAs1V+pRO7vwtS1LHg0Gw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw-src.css" integrity="sha512-vJfMKRRm4c4UupyPwGUZI8U651mSzbmmPgR3sdE3LcwBPsdGeARvUM5EcSTg34DK8YIRiIo+oJwNfZPMKEQyug==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link href="{{ url_for('static', path='/css/main.css') }}" rel="stylesheet">
-        <script src = "{{ url_for('static', path='/js/heatmap.min.js') }} "></script>
-        <script src = " {{ url_for('static', path='/js/leaflet-heatmap.js') }}  "></script>
-    </head>
-    <body> 
-      <!-- action="/search" -->
-        <form  id = "queryForm"> 
-          <label for="text">Text</label>
-          <input type="text" value = "flood" name="text" id="text" required>
-          <label for="text">Date(upper)</label>
-          <input type="date" value = "2000-01-01" name="date_gte" id="date_gte" required>
-          <label for="text">Date(lower)</label>
-          <input type="date" value = "2022-10-10" name="date_lte" id="date_lte" required>
-          <label for="lat">Latitude</label>
-          <input type="number" value = "40" name="lat" id="lat" min = "-90" max = "90" required>
-          <label for="lng">Longitude</label>
-          <input type="number" name="lng" value = "-120" id="lng" min = "-180" max = "180" required>
-          <label for="distance">Distance(km)</label>   
-          <input type="number" value = "120" name="distance" id="distance" required>
-          <div id = "button">              
-            <button id = "searchButton" type="button" >Search</button>
-          </div>
-        </form>
-      <div class="heatmap" id="map-canvas" style="width: 100%; height: 100%;">
-    <div id="map"></div> 
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"
+      integrity="sha512-ozq8xQKq6urvuU6jNgkfqAmT7jKN2XumbrX1JiB3TnF7tI48DPI4Gy1GXKD/V3EExgAs1V+pRO7vwtS1LHg0Gw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw-src.css"
+      integrity="sha512-vJfMKRRm4c4UupyPwGUZI8U651mSzbmmPgR3sdE3LcwBPsdGeARvUM5EcSTg34DK8YIRiIo+oJwNfZPMKEQyug=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="{{ url_for('static', path='/css/main.css') }}"
+      rel="stylesheet"
+    />
+    <script src="{{ url_for('static', path='/js/heatmap.min.js') }} "></script>
+    <script src=" {{ url_for('static', path='/js/leaflet-heatmap.js') }}  "></script>
+  </head>
+  <body>
+    <!-- action="/search" -->
+    <form id="queryForm">
+      <label for="text">Text</label>
+      <input type="text" value="flood" name="text" id="text" required />
+
+      <label for="text"> Date</label>
+      <p>from</p>
+      <input
+        type="date"
+        value="2000-01-01"
+        name="date_gte"
+        id="date_gte"
+        required
+      />
+      <p>to</p>
+      <input
+        type="date"
+        value="2022-10-10"
+        name="date_lte"
+        id="date_lte"
+        required
+      />
+      <label>Coordinate</label>
+      <label style="font-size: 14px; font-weight: 400" for=""
+        >You can fill it by clicking on the map</label
+      >
+      <p>Latitude</p>
+      <input
+        type="number"
+        value="40"
+        name="lat"
+        id="lat"
+        min="-90"
+        max="90"
+        required
+      />
+      <p>Longitude</p>
+      <input
+        type="number"
+        name="lng"
+        value="-120"
+        id="lng"
+        min="-180"
+        max="180"
+        required
+      />
+      <label for="distance">Distance(km)</label>
+      <input type="number" value="120" name="distance" id="distance" required />
+      <div id="button">
+        <button id="searchButton" type="button">Search</button>
+      </div>
+      <div id="#alertContainer"><p></p></div>
+    </form>
+    <div class="heatmap" id="map-canvas" style="width: 100%; height: 100%">
+      <div id="map"></div>
     </div>
-    <script src = " {{ url_for('static', path='/js/main.js') }}  "></script>
+    <script src=" {{ url_for('static', path='/js/main.js') }}  "></script>
   </body>
 </html>
