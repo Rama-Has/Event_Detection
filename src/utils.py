@@ -65,10 +65,24 @@ def get_coordinates_list(es_response):
     # [lng, lat] 
     return coordinates_score_list 
 
-def write_respone_data(coordinates):
-    """
-    write the coordinates and score list to the json file 
-    """
-    with open('./static/mapData/data.json', 'w') as file:
-        json.dump(coordinates, file)
+
+def get_tweet_text(es_response):
+    tweet_text_list = []
+    #a loop to get all coordinates
+    for index in range(len(es_response["hits"]['hits'])):  
+
+        coordinates_dict = {}           
+        tweet_text = es_response["hits"]['hits'][index]['_source']['text']  
+        tweet_text_list.append(tweet_text)
+        index = index + 1  
+    return tweet_text_list 
+
+
+
+# def write_respone_data(coordinates):
+#     """
+#     write the coordinates and score list to the json file 
+#     """
+#     with open('./static/mapData/data.json', 'w') as file:
+#         json.dump(coordinates, file)
 

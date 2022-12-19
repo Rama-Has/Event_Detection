@@ -3,8 +3,9 @@ window.onload = async function () {};
 var baseLayer = L.tileLayer(
   "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   {
+    drawControl: true,
     attribution: "...",
-    maxZoom: 20, 
+    maxZoom: 20,
   }
 );
 var cfg = {
@@ -46,7 +47,6 @@ heatmapLayer.setData(
     data: data,
   })
 );
-/*New heat end*/
 
 function getFormData() {
   let formData = {
@@ -65,7 +65,7 @@ async function getPoints() {
   let points = await fetch(
     "/search?text=" +
       formData.text +
-      "&date_gte=" +
+      "&date_gte=" +  
       formData.date_gte +
       "&date_lte=" +
       formData.date_lte +
@@ -83,9 +83,75 @@ async function getPoints() {
         data: data,
       })
     );
+    /**add invisble circles to access tweet content */
+    let text_list = res.text_list; 
+    for (let i = 0; i < text_list.length; i++) { 
+      var circle = L.circle([data[i].lat, data[i].lng], {
+        color: 'hsl(0deg 0% 100% / 0%)',
+        fillColor: 'hsl(0deg 0% 100% / 0%)',
+        fillOpacity: 0,
+        radius: 20000,
+      }).addTo(map);
+      circle.bindPopup(text_list[i]);
+    }
   });
 }
 
+//Fill location inputs by clicking on the map
+function onMapClick(e) {
+  let latlng = e.latlng;
+  $("#lat")[0].value = latlng.lat;
+  $("#lng")[0].value = latlng.lng;
+}
+//Fill location inputs by clicking on the map
+map.on("click", onMapClick);
+
 $(document).ready(async function () {
   $("#searchButton")[0].addEventListener("click", getPoints);
+    // FeatureGroup is to store editable layers
+    var drawnItems = new L.FeatureGroup();
+    map.addLayer(drawnItems);
+    var drawControl = new L.Control.Draw({
+        edit: {
+            featureGroup: drawnItems
+        }
+    });
+    map.addControl(drawControl);
 });
+
+
+// var map = L.map('map', {}).setView([51.505, -0.09], 13);
+// L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+//     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+// }).addTo(map);
+
+// /**Display tweet text after clicking on its coordinates */
+// let popup = L.popup();
+
+// function onMapClick() {
+//   popup
+//     .setLatLng([data[i].lng, data[i].lng])
+//     .setContent(res[i].text)
+//     .openOn(map);
+// }
+// map.on("click", onMapClick);
+
+
+
+/*Draw a circle while chnging the distance input */
+//  const distance_value = $('#distance')[0]; 
+//  let radius = 0
+//  let distance_circle = L.circle([$("#lat")[0].value, $("#lng")[0].value], {
+//    color: 'red',
+//    fillColor: 'red',
+//    fillOpacity: 0.7,
+//    radius: radius * 1000,
+//  }) 
+//  distance_value.addEventListener('input', updateValue);
+//  function updateValue(e) {
+//    radius = e.target.value 
+//    distance_circle.radius = e.target.value
+//    .addTo(map); 
+//  }
+/*Draw a circle while chnging the distance input end*/
+
