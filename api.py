@@ -33,9 +33,9 @@ async def  _get_docs(request: Request) -> Dict:
     docs = retreived_docs(params, es_connection) 
     coordinates = get_coordinates_list(docs)
     tweets_text = get_tweet_text(docs)
-    alert = " "
+    alert = False
     if len(coordinates) == 0:
-        alert = "Your query has no results."
+        alert = True
    
     return { 
         "alert": alert,

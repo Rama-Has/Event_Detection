@@ -78,11 +78,18 @@ async function getPoints() {
   ).then(async (response) => {
     res = await response.json();
     data = res.coordinates;
-    heatmapLayer.setData(
-      (testData = {
-        data: data,
-      })
-    );
+    // check if the coonrdinates list doesnot contain data 
+    if(res.alert){
+      $("#alertContainer")[0].classList.remove("d-none")
+    }else{  
+      $("#alertContainer")[0].classList.add("d-none")
+      heatmapLayer.setData(
+        (testData = {
+          data: data,
+        })
+      );
+    }
+
     /**add invisble circles to access tweet content */
     let text_list = res.text_list; 
     for (let i = 0; i < text_list.length; i++) { 
@@ -109,14 +116,14 @@ map.on("click", onMapClick);
 $(document).ready(async function () {
   $("#searchButton")[0].addEventListener("click", getPoints);
     // FeatureGroup is to store editable layers
-    var drawnItems = new L.FeatureGroup();
-    map.addLayer(drawnItems);
-    var drawControl = new L.Control.Draw({
-        edit: {
-            featureGroup: drawnItems
-        }
-    });
-    map.addControl(drawControl);
+    // var drawnItems = new L.FeatureGroup();
+    // map.addLayer(drawnItems);
+    // var drawControl = new L.Control.Draw({
+    //     edit: {
+    //         featureGroup: drawnItems
+    //     }
+    // });
+    // map.addControl(drawControl);
 });
 
 

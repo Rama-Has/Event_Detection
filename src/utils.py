@@ -53,25 +53,21 @@ def get_coordinates_list(es_response):
     #define coordinates_score_list which will take the coordinates for each index 
     coordinates_score_list = []
     #a loop to get all coordinates
-    for index in range(len(es_response["hits"]['hits'])):  
-
+    for index in range(len(es_response["hits"]['hits'])):   
         coordinates_dict = {}            
         coordinates = es_response["hits"]['hits'][index]['_source']['coordinates']['coordinates'] 
         coordinates_dict["score"] = es_response["hits"]['hits'][index]['_score'] 
         coordinates_dict["lat"] = coordinates[1]
         coordinates_dict["lng"] = coordinates[0]
         coordinates_score_list.append(coordinates_dict)
-        index = index + 1 
-    # [lng, lat] 
+        index = index + 1  
     return coordinates_score_list 
 
 
 def get_tweet_text(es_response):
     tweet_text_list = []
     #a loop to get all coordinates
-    for index in range(len(es_response["hits"]['hits'])):  
-
-        coordinates_dict = {}           
+    for index in range(len(es_response["hits"]['hits'])):    
         tweet_text = es_response["hits"]['hits'][index]['_source']['text']  
         tweet_text_list.append(tweet_text)
         index = index + 1  
