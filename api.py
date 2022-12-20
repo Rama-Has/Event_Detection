@@ -6,8 +6,6 @@ from typing import Dict
 from elasticsearch import Elasticsearch 
 from src.utils import retreived_docs, get_coordinates_list, get_tweet_text 
 
-# logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
-
 #connect to elasticsearch
 es_connection = Elasticsearch("http://localhost:9200") 
 

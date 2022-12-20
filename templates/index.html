@@ -43,9 +43,9 @@
     <!-- action="/search" -->
     <form id="queryForm">
       <label for="text">Text</label>
-      <input type="text" value="flood" name="text" id="text" required />
+      <input type="text" name="text" id="text" required />
 
-      <label for="text"> Date</label>
+      <label for="text"> Date Range</label>
       <p>from</p>
       <input
         type="date"
@@ -72,7 +72,7 @@
         value="40"
         name="lat"
         id="lat"
-        min="-90"
+        min="-90"                                                        
         max="90"
         required
       />
@@ -88,7 +88,7 @@
       />
       <label for="distance">Distance(km)</label>
       <input type="number" value="120" name="distance" id="distance" required />
-      <div id="button">
+      <div id="button"> 
         <button id="searchButton" type="button">Search</button>
       </div>
       <div id="#alertContainer"><p></p></div>

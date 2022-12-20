@@ -1,6 +1,6 @@
 window.onload = async function () {};
-function get_suggesstion(e){
-  console.log(e.target.value)
+function get_suggesstion(e) {
+  console.log(e.target.value);
 }
 var baseLayer = L.tileLayer(
   "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -49,60 +49,99 @@ heatmapLayer.setData(
     data: data,
   })
 );
-
+/**
+ * Check if the required field is filled in and other fields is
+ * filled if it depends on another field
+ */
+function checkFilledData() {
+  text = $("#text")[0].value;
+  date_gte = $("#date_gte")[0].value;
+  date_lte = $("#date_lte")[0].value;
+  lat = $("#lat")[0].value;
+  lng = $("#lng")[0].value;
+  distance = $("#distance")[0].value;
+    /** check if the text field is empty*/
+  if (!text) {
+    window.alert("Please fill the field");
+    return false;
+  }
+  /**Check if the range of date has a missing part (upper date or lower data) */
+  if ((date_gte && !date_lte) || (!date_gte && date_lte)) {
+    window.alert("Please fill the two dates");
+    return false;
+  }
+  /**Check if one of the coordinates is empty */
+  if (lat) {  
+    // (lat && !lng) || (!lat && lng)
+      window.alert("Please fill the lat and lng fields, you can fill them by clicking on the map");
+      return false; 
+  }
+  if(!(distance)){
+    /**Check if the distance is empty or not*/
+    window.alert("Please fill in the distance field");
+    return false;
+  }
+  return true;
+}
 function getFormData() {
-  let formData = {
-    text: $("#text")[0].value,
-    date_gte: $("#date_gte")[0].value,
-    date_lte: $("#date_lte")[0].value,
-    lat: $("#lat")[0].value,
-    lng: $("#lng")[0].value,
-    distance: $("#distance")[0].value,
-  };
-  return formData;
+  // if (checkFilledData()) {
+    let formData = {
+      text: $("#text")[0].value,
+      date_gte: $("#date_gte")[0].value,
+      date_lte: $("#date_lte")[0].value,
+      lat: $("#lat")[0].value,
+      lng: $("#lng")[0].value,
+      distance: $("#distance")[0].value,
+     };
+    return formData;
+// }
+  // else {
+  //   return false;
+  // }
 }
 
-async function getPoints() {
-  let formData = getFormData();
-  let points = await fetch(
-    "/search?text=" +
-      formData.text +
-      "&date_gte=" +  
-      formData.date_gte +
-      "&date_lte=" +
-      formData.date_lte +
-      "&lat=" +
-      formData.lat +
-      "&lng=" +
-      formData.lng +
-      "&distance=" +
-      formData.distance
-  ).then(async (response) => {
-    res = await response.json();
-    data = res.coordinates;
-    // check if the coonrdinates list doesnot contain data 
-    if(res.alert){ 
-      window.alert("Your query has no results, please try with another fields");
-    }else{ 
-      heatmapLayer.setData(
-        (testData = {
-          data: data,
-        })
-      );
-    }
-
-    /**add invisble circles to access tweet content */
-    let text_list = res.text_list; 
-    for (let i = 0; i < text_list.length; i++) { 
-      var circle = L.circle([data[i].lat, data[i].lng], {
-        color: 'hsl(0deg 0% 100% / 0%)',
-        fillColor: 'hsl(0deg 0% 100% / 0%)',
-        fillOpacity: 0,
-        radius: 20000,
-      }).addTo(map);
-      circle.bindPopup(text_list[i]);
-    }
-  });
+async function getPoints() { 
+    let formData = getFormData();
+    let points = await fetch(
+      "/search?text=" +
+        formData.text +
+        "&date_gte=" +
+        formData.date_gte +
+        "&date_lte=" +
+        formData.date_lte +
+        "&lat=" +
+        formData.lat +
+        "&lng=" +
+        formData.lng +
+        "&distance=" +
+        formData.distance
+    ).then(async (response) => {
+      res = await response.json();
+      data = res.coordinates;
+      // check if the coonrdinates list doesnot contain data
+      if (res.alert) {
+        window.alert(
+          "Your query has no results, please try with another fields"
+        );
+      } else {
+        heatmapLayer.setData(
+          (testData = {
+            data: data,
+          })
+        );
+      }
+      /**add invisble circles to access tweet content */
+      let text_list = res.text_list;
+      for (let i = 0; i < text_list.length; i++) {
+        var circle = L.circle([data[i].lat, data[i].lng], {
+          color: "hsl(0deg 0% 100% / 0%)",
+          fillColor: "hsl(0deg 0% 100% / 0%)",
+          fillOpacity: 0,
+          radius: 20000,
+        }).addTo(map);
+        circle.bindPopup(text_list[i]);
+      }
+    }); 
 }
 
 //Fill location inputs by clicking on the map
@@ -115,43 +154,9 @@ function onMapClick(e) {
 map.on("click", onMapClick);
 
 $(document).ready(async function () {
+  // event.preventDefault();
   $("#searchButton")[0].addEventListener("click", getPoints);
-  $("#text")[0].addEventListener("input", get_suggesstion)
+  $("#text")[0].addEventListener("input", get_suggesstion);
 });
 
-
-// var map = L.map('map', {}).setView([51.505, -0.09], 13);
-// L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-//     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-// }).addTo(map);
-
-// /**Display tweet text after clicking on its coordinates */
-// let popup = L.popup();
-
-// function onMapClick() {
-//   popup
-//     .setLatLng([data[i].lng, data[i].lng])
-//     .setContent(res[i].text)
-//     .openOn(map);
-// }
-// map.on("click", onMapClick);
-
-
-
-/*Draw a circle while chnging the distance input */
-//  const distance_value = $('#distance')[0]; 
-//  let radius = 0
-//  let distance_circle = L.circle([$("#lat")[0].value, $("#lng")[0].value], {
-//    color: 'red',
-//    fillColor: 'red',
-//    fillOpacity: 0.7,
-//    radius: radius * 1000,
-//  }) 
-//  distance_value.addEventListener('input', updateValue);
-//  function updateValue(e) {
-//    radius = e.target.value 
-//    distance_circle.radius = e.target.value
-//    .addTo(map); 
-//  }
-/*Draw a circle while chnging the distance input end*/
-
+ 

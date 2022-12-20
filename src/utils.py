@@ -2,7 +2,7 @@ import json
 #get retreived docs from elasticsearch 
 def retreived_docs(query_fields, es_connection):
     """
-    """
+    """ 
     documents = es_connection.search(
         index = "tweets_with_mapping2",  
         body = { 
