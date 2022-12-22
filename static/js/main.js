@@ -40,42 +40,9 @@ var map = new L.Map("map-canvas", {
 //Initiate data, an empty list as a default value.
 //date will be used later on sending the retreived coordinates to the heatmap layer
 let data = [];  
-
   
-// define checkFilledData a function to check if no field is empty
-// if any field is empty then send an alert message to user and return false
-//else, if there is no empty field return true 
-function checkFilledData() {
-  text = $("#text")[0].value;
-  date_gte = $("#date_gte")[0].value;
-  date_lte = $("#date_lte")[0].value;
-  lat = $("#lat")[0].value;
-  lng = $("#lng")[0].value;
-  distance = $("#distance")[0].value;
-  console.log(typeof(date_gte), typeof(date_lte), date_lte, lat, lng, typeof(lat))
-    /** check if the text field is empty*/
-  if (!text) {
-    window.alert("Please fill the text field");
-    return false;
-  }
-  /**Check if the range of date has a missing part (upper date or lower data) */
-  if ((date_gte && !date_lte) || (!date_gte && date_lte)) {
-    window.alert("Please fill the two dates");
-    return false;
-  }
-  /**Check if one of the coordinates is empty */
-  if (typeof(lat) == String || typeof(lng) == string) {  
-    // (lat && !lng) || (!lat && lng)
-      window.alert("Please fill the lat and lng fields, you can fill them by clicking on the map");
-      return false; 
-  }
-  if(!(distance)){
-    /**Check if the distance is empty or not*/
-    window.alert("Please fill in the distance field");
-    return false;
-  }
-  return true;
-}
+//Define getFormData function to get a dictionary of the required fields and it's values
+//which will be sent to the query  
 function getFormData() {
   let formData = {
     text: $("#text")[0].value,
@@ -88,6 +55,8 @@ function getFormData() {
   return formData; 
 }
 
+//Define getPoints, a function that will send the request to get the
+//coordinates, score and the text of retreived tweets  
 async function getPoints() { 
     let formData = getFormData();
     let points = await fetch(
@@ -106,12 +75,13 @@ async function getPoints() {
     ).then(async (response) => {
       res = await response.json();
       data = res.coordinates;
-      //Check if alert is true so the query has no result   
+      //Check if alert is true so the query has no result, send an alert message to the user  
       if (res.alert) {
         window.alert(
           "Your query has no results, please try with another fields"
         );
       } else {
+        //Pass the data to the heatmap layer so the result will be visible to the user
         heatmapLayer.setData(
           (testData = {
             data: data,
@@ -142,10 +112,8 @@ function onMapClick(e) {
 //fill location inputs by clicking on the map
 map.on("click", onMapClick);
 
-$(document).ready(async function () {
-  // event.preventDefault();
-  $("#searchButton")[0].addEventListener("click", getPoints);
-  $("#text")[0].addEventListener("input", get_suggesstion);
+$(document).ready(async function () { 
+  $("#searchButton")[0].addEventListener("click", getPoints); 
 });
 
  
