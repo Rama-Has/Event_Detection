@@ -1,58 +1,50 @@
-window.onload = async function () {};
-function get_suggesstion(e) {
-  console.log(e.target.value);
-}
+//define baselayer the base(first) layer to the map
 var baseLayer = L.tileLayer(
   "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   {
-    drawControl: true,
-    attribution: "...",
+    drawControl: true, 
     maxZoom: 20,
   }
 );
-var cfg = {
-  // radius should be small ONLY if scaleRadius is true (or small radius is intended)
-  // if scaleRadius is false it will be the constant radius used in pixels
+
+//define configurations 
+var configurations = {
+  //Set point radius to 40
   radius: 40,
+  //Set the maximum opacity to 1 for the point that has the highest score
   maxOpacity: 1,
-  // scales the radius based on map zoom
-  scaleRadius: false,
-  // if set to false the heatmap uses the global maximum for colorization
-  // if activated: uses the data maximum within the current map boundaries
-  //   (there will always be a red spot with useLocalExtremas true)
-  useLocalExtrema: true,
-  // which field name in your data represents the latitude - default "lat"
-  latField: "lat",
-  // which field name in your data represents the longitude - default "lng"
+  // Set scaleRadius to false to prevent scaling the radius based on map zoom
+  scaleRadius: false, 
+  //Set useLocalExtrema to true to colorize points according to current map boundaries 
+  useLocalExtrema: true,   
+  //Change default values of the follwing variables according to the data I want to send to the map  
+  latField: "lat", 
   lngField: "lng",
-  // which field name in your data represents the data value - default "value"
-  valueField: "score",
-  // gradient: {
-  //   0.15: "rgb(0,0,255)",
-  //   0.35: "rgb(0,255,255)",
-  //   0.65: "rgb(0,255,0)",
-  //   0.95: "yellow",
-  //   0.99: "rgb(255,0,0)",
-  // },
+  valueField: "score", 
 };
 
-var heatmapLayer = new HeatmapOverlay(cfg);
 
+//define heatmap layer (a heatmap HeatmapOverlay object) 
+//the second layer of the map which will display the points according
+//to the retrieved documents coordinates and score based on user's search  
+var heatmapLayer = new HeatmapOverlay(configurations);
+
+//Initiate a map object  
 var map = new L.Map("map-canvas", {
   center: new L.LatLng(25.6586, -80.3568),
+  //Set initial map zoom to 2
   zoom: 2,
+  //Add the predefiend two layers to the map 
   layers: [baseLayer, heatmapLayer],
 });
-let data = [];
-heatmapLayer.setData(
-  (testData = {
-    data: data,
-  })
-);
-/**
- * Check if the required field is filled in and other fields is
- * filled if it depends on another field
- */
+//Initiate data, an empty list as a default value.
+//date will be used later on sending the retreived coordinates to the heatmap layer
+let data = [];  
+
+  
+// define checkFilledData a function to check if no field is empty
+// if any field is empty then send an alert message to user and return false
+//else, if there is no empty field return true 
 function checkFilledData() {
   text = $("#text")[0].value;
   date_gte = $("#date_gte")[0].value;
@@ -60,9 +52,10 @@ function checkFilledData() {
   lat = $("#lat")[0].value;
   lng = $("#lng")[0].value;
   distance = $("#distance")[0].value;
+  console.log(typeof(date_gte), typeof(date_lte), date_lte, lat, lng, typeof(lat))
     /** check if the text field is empty*/
   if (!text) {
-    window.alert("Please fill the field");
+    window.alert("Please fill the text field");
     return false;
   }
   /**Check if the range of date has a missing part (upper date or lower data) */
@@ -71,7 +64,7 @@ function checkFilledData() {
     return false;
   }
   /**Check if one of the coordinates is empty */
-  if (lat) {  
+  if (typeof(lat) == String || typeof(lng) == string) {  
     // (lat && !lng) || (!lat && lng)
       window.alert("Please fill the lat and lng fields, you can fill them by clicking on the map");
       return false; 
@@ -84,20 +77,15 @@ function checkFilledData() {
   return true;
 }
 function getFormData() {
-  // if (checkFilledData()) {
-    let formData = {
-      text: $("#text")[0].value,
-      date_gte: $("#date_gte")[0].value,
-      date_lte: $("#date_lte")[0].value,
-      lat: $("#lat")[0].value,
-      lng: $("#lng")[0].value,
-      distance: $("#distance")[0].value,
-     };
-    return formData;
-// }
-  // else {
-  //   return false;
-  // }
+  let formData = {
+    text: $("#text")[0].value,
+    date_gte: $("#date_gte")[0].value,
+    date_lte: $("#date_lte")[0].value,
+    lat: $("#lat")[0].value,
+    lng: $("#lng")[0].value,
+    distance: $("#distance")[0].value,
+    };
+  return formData; 
 }
 
 async function getPoints() { 
@@ -118,7 +106,7 @@ async function getPoints() {
     ).then(async (response) => {
       res = await response.json();
       data = res.coordinates;
-      // check if the coonrdinates list doesnot contain data
+      //Check if alert is true so the query has no result   
       if (res.alert) {
         window.alert(
           "Your query has no results, please try with another fields"
@@ -144,13 +132,14 @@ async function getPoints() {
     }); 
 }
 
-//Fill location inputs by clicking on the map
+//Define onMapClick a function to 
+//fill location inputs by clicking on the map
 function onMapClick(e) {
   let latlng = e.latlng;
   $("#lat")[0].value = latlng.lat;
   $("#lng")[0].value = latlng.lng;
 }
-//Fill location inputs by clicking on the map
+//fill location inputs by clicking on the map
 map.on("click", onMapClick);
 
 $(document).ready(async function () {
