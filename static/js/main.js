@@ -58,7 +58,9 @@ function getFormData() {
 //Define getPoints, a function that will send the request to get the
 //coordinates, score and the text of retreived tweets  
 async function getPoints() { 
+  //Define formData to get the form fields and its values to use them while sending the request
     let formData = getFormData();
+    //Send the search request 
     let points = await fetch(
       "/search?text=" +
         formData.text +
@@ -88,22 +90,25 @@ async function getPoints() {
           })
         );
       }
-      /**add invisble circles to access tweet content */
+      // Add invisible circles to the map to open a popup after clickin on it 
       let text_list = res.text_list;
       for (let i = 0; i < text_list.length; i++) {
         var circle = L.circle([data[i].lat, data[i].lng], {
+          //Set the color of the circle and its border to transparent
           color: "hsl(0deg 0% 100% / 0%)",
           fillColor: "hsl(0deg 0% 100% / 0%)",
           fillOpacity: 0,
+          // Set the radius of the circle to 20 000 to allow the user click on it 
+          //to show the popup that contains the text of the tweet
           radius: 20000,
-        }).addTo(map);
+        }).addTo(map);//Add the circle to the map
+        //Add the popup and its content to the circle 
         circle.bindPopup(text_list[i]);
       }
     }); 
 }
 
-//Define onMapClick a function to 
-//fill location inputs by clicking on the map
+//Define onMapClick a function to fill location inputs by clicking on the map
 function onMapClick(e) {
   let latlng = e.latlng;
   $("#lat")[0].value = latlng.lat;
@@ -111,6 +116,7 @@ function onMapClick(e) {
 }
 //fill location inputs by clicking on the map
 map.on("click", onMapClick);
+
 
 $(document).ready(async function () { 
   $("#searchButton")[0].addEventListener("click", getPoints); 
