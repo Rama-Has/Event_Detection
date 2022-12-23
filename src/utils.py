@@ -1,11 +1,12 @@
 import json
 #get retrieved docs from elasticsearch 
-def retrieved_docs(query_fields_value, es_connection):
-    """  
-    
+def retrieved_documents(query_fields_value, es_connection, index_name):
+    """ 
+    function to return the response of elasticsearch client search api according
+    to the follwoing query
     """ 
     documents = es_connection.search(
-        index = "tweets_with_mapping2",  
+        index = index_name,  
         body = { 
             "size": 1000, 
             "query": {

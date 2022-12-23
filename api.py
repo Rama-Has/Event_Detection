@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from http import HTTPStatus 
 from typing import Dict 
 from elasticsearch import Elasticsearch 
-from src.utils import retreived_docs, get_coordinates_list, get_tweet_text 
+from src.utils import retrieved_documents, get_coordinates_list, get_tweet_text 
 
 #connect to elasticsearch
 es_connection = Elasticsearch("http://localhost:9200") 
@@ -26,7 +26,7 @@ def _search_view(request: Request):
 async def  _get_docs(request: Request) -> Dict:  
     params = request.query_params.items()
     params = dict(params)  
-    docs = retreived_docs(params, es_connection) 
+    docs = retrieved_documents(params, es_connection, "tweets_with_mapping2") 
     coordinates = get_coordinates_list(docs)
     tweets_text = get_tweet_text(docs)
     alert = False
