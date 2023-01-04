@@ -57,7 +57,9 @@ function getFormData() {
 
 //Define getPoints, a function that will send the request to get the
 //coordinates, score and the text of retreived tweets  
-async function getPoints() { 
+async function getPoints(event) { 
+  
+  event.preventDefault();
   //Define formData to get the form fields and its values to use them while sending the request
     let formData = getFormData();
     //Send the search request 
@@ -119,7 +121,11 @@ map.on("click", onMapClick);
 
 
 $(document).ready(async function () { 
-  $("#searchButton")[0].addEventListener("click", getPoints); 
+  // $("#searchButton")[0].addEventListener("click",(event)=>{
+  //   // getPoints()
+  //   // event.preventDefault();
+
+  // } ); 
 });
 
  

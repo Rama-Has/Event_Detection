@@ -24,16 +24,23 @@ def _search_view(request: Request):
   
 @app.get('/search')
 async def  _get_docs(request: Request) -> Dict:  
+    """
+    Return a response contains a coordinates list of dictionaries that contains the lat, lng, 
+    score for each retrieved documents
+    """
     params = request.query_params.items()
     params = dict(params)  
     docs = retrieved_documents(params, es_connection, "tweets_with_mapping2") 
     coordinates = get_coordinates_list(docs)
     tweets_text = get_tweet_text(docs)
     alert = False
+    #Check if the query respone has no documents
     if len(coordinates) == 0:
         alert = True
    
     return { 
+        "message": HTTPStatus.OK.phrase,
+        "status-code": HTTPStatus.OK, 
         "alert": alert,
         "coordinates": coordinates,
         "text_list": tweets_text,

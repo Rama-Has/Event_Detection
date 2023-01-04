@@ -58,6 +58,7 @@
         type="date" 
         name="date_lte"
         id="date_lte"
+        step="any"
         required
       />
       <label>Coordinate</label>
@@ -71,6 +72,7 @@
         id="lat"
         min="-90"                                                        
         max="90"
+        step="any"
         required
       />
       <p>Longitude</p>
@@ -85,7 +87,7 @@
       <label for="distance">Distance(km)</label>
       <input type="number" name="distance" id="distance" required />
       <div id="button"> 
-        <button id="searchButton" type="button">Search</button>
+        <button id="searchButton" type="submit" onclick = "getPoints()">Search</button>
       </div>
       <div id="#alertContainer"><p></p></div>
     </form>

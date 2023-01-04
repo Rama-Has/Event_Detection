@@ -2,8 +2,9 @@ import json
 #get retrieved docs from elasticsearch 
 def retrieved_documents(query_fields_value, es_connection, index_name):
     """ 
-    function to return the response of elasticsearch client search api according
-    to the follwoing query
+    function to return the response(retrieved documents) of elasticsearch client search api according
+    to the follwoing query, this query find documents , the retrieved documents will be ordered in descending order, the order is
+    based on document score. 
     """ 
     documents = es_connection.search(
         index = index_name,  
