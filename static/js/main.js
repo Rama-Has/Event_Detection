@@ -57,8 +57,7 @@ function getFormData() {
 
 //Define getPoints, a function that will send the request to get the
 //coordinates, score and the text of retreived tweets  
-async function getPoints(event) { 
-  
+async function getPoints(event) {  
   event.preventDefault();
   //Define formData to get the form fields and its values to use them while sending the request
     let formData = getFormData();
